@@ -1,0 +1,99 @@
+﻿
+
+@model CourseOverviewListModel
+
+@inject CatalogSettings catalogSettings
+@inject IWorkContext workContext
+@{
+
+}
+
+
+@if (Model.Courses.Count() > 0)
+{
+    <div class="product-grid">
+        <div class="item-grid">
+            @foreach (var course in Model.Courses)
+            {
+                <div class="item-box">
+                    <div class="product-item" data-productid="@course.Id">
+                        <div class="picture">
+                            <a href="@Url.Action("CoursesDetails","Customer", new { courseId = course.Id })" title="@course.ParentProductName">
+                                <img alt="@course.ParentProductName" src="@course.ProductMainImage" title="@course.ParentProductName" />
+                            </a>
+                        </div>
+                        <div class="details">
+                            <h2 class="product-title">
+                                <a href="@Url.Action("CoursesDetails","Customer", new { courseId = course.Id })">@course.ParentProductName</a>
+                            </h2>
+                            <div class="progress"></div>
+                            <div class="buttons">
+                                <a href="@Url.Action("CoursesDetails","Customer", new { courseId = course.Id })" class="button-1">@(course.CourseProgress == 0 ? T("SimpleLMS.Start") : T("SimpleLMS.Resume"))</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    var pager = Html.Pager(Model)
+            .QueryParam("page")
+            .RenderEmptyParameters(true);
+
+    @if (!await pager.IsEmpty())
+    {
+        <div class="pager">`
+            @pager
+        </div>
+        <script type="text/javascript">$(document).ready(function () {
+                addPagerHandlers();
+            });</script>
+    }
+
+}
+else
+{
+    <div>@T("SimpleLMS.MyCourses.NoCoursesToShow")</div>
+}
+
+
+
+
+
+@*<div class="product-item" data-productid="@Model.Id">
+        <div class="picture">
+            <a href="@Url.RouteUrl("Product", new { productid = Model.Id })" title="@Model.DefaultPictureModel.Title">
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+            </a>
+        </div>
+        <div class="details">
+            <h2 class="product-title">
+                <a href="@Url.RouteUrl("CoursesDetails", new {productid = Model.Id})">@Model.Name</a>
+            </h2>
+            @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+                {
+                    <div class="sku">
+                        @Model.Sku
+                    </div>
+                }
+            @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+                {
+                    var ratingPercent = 0;
+                    if (Model.ReviewOverviewModel.TotalReviews != 0)
+                    {
+                        ratingPercent = ((Model.ReviewOverviewModel.RatingSum*100)/Model.ReviewOverviewModel.TotalReviews)/5;
+                    }
+                    <div class="product-rating-box" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
+                        <div class="rating">
+                            <div style="width: @(ratingPercent)%">
+                            </div>
+                        </div>
+                    </div>
+                }
+            <div class="description">
+                @Html.Raw(Model.ShortDescription)
+            </div>
+
+        </div>
+    </div>*@

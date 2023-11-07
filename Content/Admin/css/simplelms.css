@@ -1,0 +1,134 @@
+﻿
+.ajax-loading-block-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  background: url('../images/loading.gif') center no-repeat;
+}
+
+.please-wait {
+  background: url('../images/ajax-loader-small.gif') no-repeat;
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+.ui-dialog {
+  max-width: 90%;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 2px rgba(0,0,0,0.15);
+  overflow: hidden;
+  background-color: #fff;
+  /*override jQuery UI styles, do not delete doubled properties*/
+  border-radius: 0;
+  padding: 0;
+  font: normal 14px Arial, Helvetica, sans-serif;
+}
+
+  .ui-dialog:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+  }
+
+.ui-dialog-titlebar {
+  border-bottom: 1px solid #ddd;
+  overflow: hidden;
+  background-color: #eee;
+  padding: 10px 15px;
+  /*override jQuery UI styles, do not delete doubled properties*/
+  border-width: 0 0 1px;
+  border-radius: 0;
+  background-image: none;
+  padding: 10px 15px !important;
+  font-weight: normal;
+  cursor: auto !important;
+}
+
+  .ui-dialog-titlebar > span {
+    float: left;
+    font-size: 18px;
+    color: #444;
+    /*override jQuery UI styles, do not delete doubled properties*/
+    margin: 0 !important;
+  }
+
+  .ui-dialog-titlebar button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 42px;
+    height: 42px;
+    border: none;
+    overflow: hidden;
+    background: url('../images/close.png') center no-repeat;
+    font-size: 0;
+    /*override jQuery UI styles, do not delete doubled properties*/
+    top: 0 !important;
+    right: 0 !important;
+    width: 42px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0;
+    background: url('../images/close.png') center no-repeat !important;
+    padding: 0 !important;
+  }
+
+    .ui-dialog-titlebar button span {
+      display: none !important;
+    }
+
+.ui-dialog-content {
+  padding: 15px;
+  line-height: 20px;
+  /*override jQuery UI styles, do not delete doubled properties*/
+  background-color: #fff !important;
+  padding: 15px 15px 20px 15px !important;
+  color: #777;
+}
+
+  .ui-dialog-content .page {
+    min-height: 0;
+  }
+
+  .ui-dialog-content .page-title {
+    min-height: 0;
+    margin: 0 0 15px;
+    padding: 0px 10px 10px 10px;
+    text-align: center;
+  }
+
+    .ui-dialog-content .page-title h1 {
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+  .ui-dialog-content .back-in-stock-subscription-page {
+    text-align: center;
+  }
+
+    .ui-dialog-content .back-in-stock-subscription-page .tooltip {
+      margin-bottom: 10px;
+    }
+
+    .ui-dialog-content .back-in-stock-subscription-page .button-1 {
+      border: none;
+      background-color: #4ab2f1;
+      padding: 10px 15px;
+      font-size: 15px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+      .ui-dialog-content .back-in-stock-subscription-page .button-1:hover,
+      .ui-dialog-content .back-in-stock-subscription-page .button-1:focus {
+        background-color: #248ece;
+      }

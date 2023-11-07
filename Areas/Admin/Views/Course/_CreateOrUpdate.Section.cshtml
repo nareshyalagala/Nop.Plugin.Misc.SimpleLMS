@@ -1,0 +1,43 @@
+﻿@model SectionModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+@{
+
+}
+
+<div class="card bg-light mb-3">
+    <div class="card-header">
+
+        @Model.DisplayOrder. @T("SimpleLMS.Section"): <strong>@Model.Title</strong>
+        @if (Model.IsFree)
+        {
+            <span class='badge badge-success ml-2'>Free</span>
+        }
+        <div class="float-right">
+            <button type="button" class="btn btn-primary btn-sm" onclick="editSection(@Model.Id)" id="edit-section-@Model.Id">@T("SimpleLMS.Edit") @T("SimpleLMS.Section")</button>&nbsp;
+            <button type="button" class="btn btn-primary btn-sm" onclick="addLesson(@Model.Id,@Model.CourseId)" id="add-lesson-@Model.Id">@T("SimpleLMS.Add") @T("SimpleLMS.Lesson")</button>&nbsp;
+            <button type="button" class="btn btn-secondary btn-sm" id="sort-lessons-@Model.Id" onclick="sortLessons(@Model.Id,@Model.CourseId)">@T("SimpleLMS.Sort") @T("SimpleLMS.Lessons")</button>&nbsp;
+            <button type="button" class="btn btn-danger btn-sm" id="delete-section-@Model.Id" onclick="deleteSection(@Model.Id)">@T("SimpleLMS.Delete") @T("SimpleLMS.Section")</button>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (Model.Lessons != null && Model.Lessons.Count > 0)
+        {
+
+            @await Html.PartialAsync("_CreateOrUpdate.Lessons.cshtml", Model.Lessons)
+        }
+        else
+        {
+            <h5 class="card-title">
+                <strong>  @T("SimpleLMS.NoLessonsAvailable")</strong>
+            </h5>
+        }
+    </div>
+
+</div>
+

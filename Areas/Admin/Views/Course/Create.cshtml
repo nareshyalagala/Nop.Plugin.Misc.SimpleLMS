@@ -1,0 +1,34 @@
+@model CourseModel
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+@inject INopHtmlHelper NopHtml
+
+@{
+    //page title
+    ViewBag.PageTitle = T("SimpleLMS.Add").Text + " " + T("SimpleLMS.Course");
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("SimpleLMS.Courses");
+}
+
+
+<form asp-controller="Course" asp-action="Create" method="post" id="product-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SimpleLMS.Add") @T("SimpleLMS.Course")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("SimpleLMS.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate.cshtml", Model)
+</form>

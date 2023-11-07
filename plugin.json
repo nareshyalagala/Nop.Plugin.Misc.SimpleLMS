@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "SimpleLMS",
+  "SystemName": "Misc.SimpleLMS",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "www.slyko.tech",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.SimpleLMS.dll",
+  "Description": "SimpleLMS is a learning management system plugin for NopCommerce."
+}

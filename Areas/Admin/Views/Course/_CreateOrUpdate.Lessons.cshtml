@@ -1,0 +1,17 @@
+﻿@model IList<LessonModel>
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+@{
+
+}
+
+
+@foreach (var lesson in Model)
+{
+    @await Html.PartialAsync("_CreateOrUpdate.Lesson.cshtml", lesson)
+}

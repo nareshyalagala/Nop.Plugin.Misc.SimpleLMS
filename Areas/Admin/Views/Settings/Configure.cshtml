@@ -1,0 +1,66 @@
+@model ConfigurationModel
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+@inject INopHtmlHelper NopHtml
+
+@{
+    const string hideYouTubeBlockAttributeName = "Configuration.HideYouTubeBlock";
+
+    var hideYouTubeBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideYouTubeBlockAttributeName);
+
+    const string hideVimeoBlockAttributeName = "Configuration.HideVimeoBlock";
+
+    var hideVimeoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideVimeoBlockAttributeName);
+
+    const string hideVdoCipherBlockAttributeName = "Configuration.HideVdoCipherBlock";
+
+    var hideVdoCipherBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideVdoCipherBlockAttributeName);
+
+
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("SimpleLMS.configuration");
+}
+
+@*<link href="@Url.Content("~/Plugins/Misc.SimpleLMS/Content/Admin/css/jquery-ui-1.10.4.custom.min.css")" rel="stylesheet" type="text/css" />*@
+@*<link href="@Url.Content("~/Plugins/Misc.SimpleLMS/Content/Admin/css/simplelms.css")" type="text/css" rel="stylesheet" />*@
+@*<script type="text/javascript" src="@Url.Content("~/Plugins/Misc.SimpleLMS/Content/Admin/js/jquery-ui-1.10.4.custom.min.js")"></script>*@
+
+<form asp-controller="Settings" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Plugins.SimpleLMS.Configuration.PageTitle")
+                    </div>
+                    <div class="card-body form-horizontal">
+                        <nop-cards id="course-cards">
+                            @*<nop-card asp-name="YouTube" asp-icon="fas fa-info" asp-title="@T("SimpleLMS.Configuration.Youtube")" asp-hide-block-attribute-name="@hideYouTubeBlockAttributeName" asp-hide="@hideYouTubeBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Youtube.cshtml", Model)</nop-card>*@
+
+                            <nop-card asp-name="Vimeo" asp-icon="fas fa-info" asp-title="@T("SimpleLMS.Configuration.Vimeo")" asp-hide-block-attribute-name="@hideVimeoBlockAttributeName" asp-hide="@hideVimeoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Vimeo.cshtml", Model)</nop-card>
+                            @*<nop-card asp-name="VdoCipher" asp-icon="fas fa-info" asp-title="@T("SimpleLMS.Configuration.VdoCipher")" asp-hide-block-attribute-name="@hideVdoCipherBlockAttributeName" asp-hide="@hideVdoCipherBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.VdoCipher.cshtml", Model)</nop-card>*@
+
+                        </nop-cards>
+
+
+
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+
+
+

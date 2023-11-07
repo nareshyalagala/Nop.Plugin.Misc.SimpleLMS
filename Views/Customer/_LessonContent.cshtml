@@ -1,0 +1,38 @@
+﻿@model Nop.Plugin.Misc.SimpleLMS.Models.LessonDetail
+@using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Plugin.Misc.SimpleLMS.Domains
+@inject CatalogSettings catalogSettings
+@inject IWorkContext workContext
+@{
+
+    var simpleLMSSettings = (SimpleLMSSettings)ViewData["simpleLMSSettings"];
+
+}
+
+@if (Model.LessonType == LessonType.Video)
+{
+    <div id="video-content">
+        @if (Model.Video.VideoType == VideoType.Youtube)
+        {
+            <div class="video-container">
+                <iframe height="400" width="100%" src="https://www.youtube.com/embed/@Model.Video.VideoIdFromProvider?autoplay=1@(!string.IsNullOrEmpty(Model.Video.TimeCode)?"&amp;start="+Model.Video.TimeCode:"")"
+                        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                </iframe>
+            </div>
+        }
+        @if (Model.Video.VideoType == VideoType.Vimeo)
+        {
+            <div style="padding:56.25% 0 0 0;position:relative;">
+                <iframe src="https://player.vimeo.com/video/@(Model.Video.VideoIdFromProvider+(!string.IsNullOrEmpty(Model.Video.TimeCode)?"#"+Model.Video.TimeCode:"") )?autoplay=1&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;byline=0&amp;title=0@(!string.IsNullOrEmpty(simpleLMSSettings.VimeoClient)?"&amp;app_id="+simpleLMSSettings.VimeoClient:"")'"
+                        frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+            </div>
+            <script src="https://player.vimeo.com/api/player.js"></script>
+        }
+    </div>
+
+
+}
+<div class="p-3 mt-3">
+    @Html.Raw(Model.LessonContents)
+</div>

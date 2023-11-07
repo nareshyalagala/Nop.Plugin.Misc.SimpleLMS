@@ -1,0 +1,25 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+
+
+
+@{
+
+}
+
+<div class="card-body">
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="YouTubeApiKey" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="YouTubeApiKey" asp-required="true" />
+            <span asp-validation-for="YouTubeApiKey"></span>
+        </div>
+    </div>
+
+</div>

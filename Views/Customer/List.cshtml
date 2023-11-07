@@ -1,0 +1,188 @@
+﻿@model CourseSearchModel
+
+
+
+@{
+    Layout = "_ColumnsTwo";
+    NopHtml.AddTitleParts(T("SimpleLMS.MyCourses").Text);
+
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = SimpleLMSDefaults.CustomerMyCoursesMenuTab })
+}
+
+
+
+<div class="page account-page customer-info-page">
+    <div class="page-title course-title-box flex-container">
+        <h1 class="d-inline">@T("SimpleLMS.MyCourses")</h1>
+        <div class="search-box store-search-box course-search-box push" id="course-search-div">
+            <form id="search-courses-form">
+                <input type="text" class="search-box-text" id="search-course-name" autocomplete="off" name="SearchCourseName" placeholder="@T("SimpleLMS.SearchCourses")"
+                       aria-label="@T("Search.SearchBox.Text.Label")" />
+
+                <button type="submit" id="course-search" class="button-1 search-box-button">@T("Search.Button")</button>
+            </form>
+        </div>
+    </div>
+    <div class="page-body">
+
+        <!--Search-->
+        <div class="products-container">
+            <div class="ajax-products-busy"></div>
+            <div class="products-wrapper" id="course-list-parent">
+                @*@await Html.PartialAsync("_MyCourseList", Model.CourseOverviewList)*@
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+
+    .course-title-box {
+        display: flex;
+    }
+
+        .course-title-box .push {
+            margin-left: auto;
+        }
+
+    .course-search-box input.search-box-text {
+        width: 150px !important;
+    }
+</style>
+
+<script asp-location="Footer">$(document).ready(function () {
+
+        $('#search-courses-form').submit(
+            function (e) {
+
+                e.preventDefault();
+
+                var _form = $(this).closest("form");
+                _form.removeData('validator');
+                _form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(_form);
+
+                var isValid = $(_form).validate().form();
+
+                if (!isValid) {
+                    return false;
+                }
+
+                $(this).prop('disabled', true);
+
+                var searchTerm = $("#course-search-div").find("#search-course-name").val();
+                var pageNumber = 1;
+
+                setQueryString('keyword', searchTerm);
+                setQueryString('page', pageNumber);
+
+                getCourseData(pageNumber, searchTerm);
+
+            });
+
+    loadCourses();
+       
+
+    });
+
+    function getCourseData(pageNo, searchTerm) {
+
+        var data = {
+            searchCourseName: searchTerm,
+            pageNumber: pageNo
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/customer/searchmycourses',
+            data: JSON.stringify(data),
+            headers: {
+                "RequestVerificationToken":
+                    $('input:hidden[name="__RequestVerificationToken"]').val(),
+                'Content-Type': 'application/json'
+            },
+            success: function (response) {
+                $('#course-list-parent').html(response);
+                $(this).prop('enabled', false);
+            },
+            failure: function (response) {
+
+                alert(JSON.stringify(response));
+                $(this).prop('enabled', false);
+
+            },
+            error: function (response) {
+                alert(JSON.stringify(response));
+                $(this).prop('enabled', false);
+            }
+        });
+    }
+
+
+
+
+    function addPagerHandlers() {
+
+
+        $('.pager [data-page]').each(function () {
+            var hrefl = $(this).attr('href');
+            var url = new URL(hrefl);
+
+            var seachText = getQueryString('keyword');
+
+            if (!seachText)
+                seachText = '';
+
+            url.searchParams.set("keyword", seachText);
+            var newUrl = url.href;
+            $(this).attr("href", newUrl);
+
+        });
+
+
+        $('.pager [data-page]').on('click', function (e) {
+            e.preventDefault();
+            var seachText = getQueryString('keyword');
+
+            if (!seachText)
+                seachText = '';
+
+            setQueryString("page", $(this).data('page'));
+
+            getCourseData($(this).data('page'), seachText);
+
+            return false;
+
+        });
+    }
+
+    function loadCourses() {
+
+        var keyword = getQueryString('keyword');
+
+        if (!keyword)
+            keyword = '';
+
+        var page = getQueryString('page');
+
+        if (!page || isNaN(page))
+            page = '1';
+
+        $("#course-search-div").find("#search-course-name").val(keyword);
+
+        getCourseData(page, keyword);
+    }
+
+    function getQueryString(key) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(key); 
+    }
+
+    function setQueryString(key, value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set(key, value);
+        window.history.replaceState(null, null, url);
+    }</script>

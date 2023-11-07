@@ -1,0 +1,297 @@
+﻿@model CourseModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+@{
+
+}
+
+
+
+<div class="card-body">
+
+    @if (Model.Id > 0)
+    {
+        <div class="text-center">
+            <button type="button" class="btn btn-primary btn-sm" id="add-section">@T("SimpleLMS.Add") @T("SimpleLMS.Section")</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="sort-sections" onclick="sortSections(@Model.Id)">@T("SimpleLMS.Sort") @T("SimpleLMS.Sections")</button>
+        </div>
+        <div class="card-body" id="sections">
+            @* @await Html.PartialAsync("_CreateOrUpdate.Sections.cshtml", Model.Sections);*@
+        </div>
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                refreshSections();
+                $('#add-section').on('click',
+                    function (e) {
+                        e.preventDefault();
+
+                        @*displayPopupContentFromUrl('@Url.Action("CreateSection", "Course")?courseId=@Model.Id',
+                                                        '@T("SimpleLMS.CreateNewSection")');*@
+
+                        $('<div id="create-or-edit-section-modal" class="form-horizontal"></div>').load('@Url.Action("CreateSection", "Course")?courseId=@Model.Id')
+                            .dialog({
+                                modal: true,
+                                width: 800,
+                                position: {
+                                    of: window, my: "top+100", at: "top"
+                                },
+                                maxHeight: $(window).height() - 20,
+                                title: '@T("SimpleLMS.Create") @T("SimpleLMS.Section")',
+                                close: function (event, ui) {
+                                    $(this).dialog('destroy').remove();
+                                }
+                            });
+                    });
+                $('#delete-anything-close-dialog').click(function () {
+                    closeConfirmDialog();
+                });
+
+            });
+
+            function closeConfirmDialog() {
+                $('#delete-anything').dialog("close");
+            }
+
+            function editSection(sectionId)
+            {
+
+                $('<div id="create-or-edit-section-modal" class="form-horizontal"></div>').load('@Url.Action("EditSection", "Course")?sectionId=' + sectionId)
+                    .dialog({
+                        modal: true,
+                        width: 800,
+                        position: {
+                            of: window, my: "top+100", at: "top"
+                        },
+                                maxHeight: $(window).height() - 20,
+                                title: '@T("SimpleLMS.Edit") @T("SimpleLMS.Section")',
+                                close: function (event, ui) {
+                                    $(this).dialog('destroy').remove();
+                                }
+                            });
+            }
+
+            function refreshSections() {
+                $("#sections").load('@Url.Action("Sections", "Course")' + '?courseId=@Model.Id');
+            }
+
+            function addLesson(sectionId,courseId)
+            {
+                $('<div id="create-or-edit-lesson-modal" class="form-horizontal"></div>').load('@Url.Action("CreateLesson", "Course")?sectionId=' + sectionId + '&courseId=' + courseId)
+                    .dialog({
+                        modal: true,
+                        width: 800,
+                        position: {
+                            of: window, my: "top+100", at: "top"
+                        },
+                        maxHeight: $(window).height() - 20,
+                        title: '@T("SimpleLMS.Create") @T("SimpleLMS.Lesson")',
+                        close: function (event, ui) {
+                                    $(this).dialog('destroy').remove();
+                                    removeTinymce();
+                                }
+                            });
+            }
+
+            function editLesson(lessonId,sectionId,courseId)
+            {
+                $('<div id="create-or-edit-lesson-modal" class="form-horizontal"></div>').load('@Url.Action("EditLesson", "Course")?lessonId=' + lessonId + '&sectionId=' + sectionId + '&courseId=' + courseId)
+                    .dialog({
+                        modal: true,
+                        width: 800,
+                        position: {
+                            of: window, my: "top+100", at: "top"
+                        },
+                        maxHeight: $(window).height() - 20,
+                        title: '@T("SimpleLMS.Edit") @T("SimpleLMS.Lesson")',
+                        close: function (event, ui) {
+                                    $(this).dialog('destroy').remove();
+                                    removeTinymce();
+                                }
+                            });
+            }
+
+            function sortLessons(sectionId, courseId)
+            {
+                $('<div id="sort-modal" class="form-horizontal"></div>').load('@Url.Action("SortLessons", "Course")?sectionId=' + sectionId)
+                    .dialog({
+                        modal: true,
+                        width: 800,
+                        position: {
+                            of: window, my: "top+100", at: "top"
+                        },
+                        maxHeight: $(window).height() - 20,
+                        title: '@T("SimpleLMS.Sort") @T("SimpleLMS.Lessons")',
+                        close: function (event, ui) {
+                                    $(this).dialog('destroy').remove();
+                                    removeTinymce();
+                                }
+                            });
+            }
+
+
+            function sortSections(courseId)
+            {
+                $('<div id="sort-modal" class="form-horizontal"></div>').load('@Url.Action("SortSections", "Course")?courseId=' + courseId)
+                    .dialog({
+                        modal: true,
+                        width: 800,
+                        position: {
+                            of: window, my: "top+100", at: "top"
+                        },
+                        maxHeight: $(window).height() - 20,
+                        title: '@T("SimpleLMS.Sort") @T("SimpleLMS.Sections")',
+                        close: function (event, ui) {
+                                    $(this).dialog('destroy').remove();
+                                    removeTinymce();
+                                }
+                            });
+            }
+
+
+            function deleteLesson(lessonId,sectionId,courseId)
+            {
+
+                openDialog();
+
+                $('#delete-anything-submit-button').off();
+
+                $('#delete-anything-submit-button').on('click',
+                    function (e) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("DeleteLesson", "Course")',
+                            //data: $('#create-or-edit-section').serialize(),
+                            data: {
+                                lessonId: lessonId,
+                                sectionId: sectionId,
+                                courseId: courseId
+                            },
+                            headers: {
+                                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                closeConfirmDialog();
+                                $('#deleteSelectedFailed-info').text(jqXHR.responseText + ' ' + errorThrown);
+                                $('#deleteSelectedFailed').click();
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                closeConfirmDialog();
+                                refreshSections();
+                            }
+                        })
+                    });
+            }
+
+            function deleteSection(sectionId)
+            {
+
+                openDialog();
+
+                $('#delete-anything-submit-button').off();
+                $('#delete-anything-submit-button').on('click',
+                    function(e) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("DeleteSection", "Course")',
+                            //data: $('#create-or-edit-section').serialize(),
+                            data: {
+                                sectionId: sectionId
+                            },
+                            headers: {
+                                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                closeConfirmDialog();
+                                $('#deleteSelectedFailed-info').text(jqXHR.responseText + ' ' + errorThrown);
+                                $('#deleteSelectedFailed').click();
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                closeConfirmDialog();
+                                refreshSections();
+                            }
+                        });
+
+                    });
+            }
+
+
+            function deleteCourse(courseId)
+            {
+
+                openDialog();
+
+                $('#delete-anything-submit-button').off();
+                $('#delete-anything-submit-button').on('click',
+                    function(e) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("Delete", "Course")',
+                            //data: $('#create-or-edit-section').serialize(),
+                            data: {
+                                courseId: courseId
+                            },
+                            headers: {
+                                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                closeConfirmDialog();
+                                $('#deleteSelectedFailed-info').text(jqXHR.responseText + ' ' + errorThrown);
+                                $('#deleteSelectedFailed').click();
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                closeConfirmDialog();
+                                refreshSections();
+                            }
+                        });
+
+                    });
+            }
+
+            function openDialog() {
+                $('#delete-anything').dialog({
+                    resizable: false,
+                    height: "auto",
+                    width: 400,
+                    modal: true,
+                    title: '@T("Admin.Common.AreYouSure")'
+                });
+            }
+
+            function removeTinymce() {
+                while (tinymce.editors.length > 0) {
+                    tinymce.remove(tinymce.editors[0]);
+                }
+            }
+
+        </script>
+        <nop-alert asp-alert-id="deleteSelectedFailed" />
+    }
+    else
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @T("SimpleLMS.SaveCourseToAddContentMessage")
+        </div>
+    }
+</div>
+
+
+<div id="delete-anything" style="display: none;">
+    <div class="modal-body">
+        @T("Admin.Common.DeleteConfirmation")
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="delete-anything-submit-button" class="btn btn-primary float-right">
+            @T("Admin.Common.Yes")
+        </button> <span class="btn btn-default float-right margin-r-5" data-dismiss="modal" id="delete-anything-close-dialog">
+            @T("Admin.Common.NoCancel")
+        </span>
+    </div>
+</div>
+

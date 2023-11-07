@@ -1,0 +1,51 @@
+@model CourseModel
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+@inject INopHtmlHelper NopHtml
+
+@{
+    //page title
+    ViewBag.PageTitle = T("SimpleLMS.Edit").Text + " " + T("SimpleLMS.Course");
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("SimpleLMS.Courses");
+}
+
+@*<link href="@Url.Content("~/Plugins/Misc.SimpleLMS/Content/Admin/css/jquery-ui-1.10.4.custom.min.css")" rel="stylesheet" type="text/css" />*@
+<link href="@Url.Content("~/Plugins/Misc.SimpleLMS/Content/Admin/css/simplelms.css")" type="text/css" rel="stylesheet" />
+@*<script type="text/javascript" src="@Url.Content("~/Plugins/Misc.SimpleLMS/Content/Admin/js/jquery-ui-1.10.4.custom.min.js")"></script>*@
+
+
+
+<form asp-controller="Course" asp-action="Edit" method="post" id="product-form">
+    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SimpleLMS.Edit") @T("SimpleLMS.Course")  - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("SimpleLMS.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+
+            <span id="course-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate.cshtml", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="course-delete" />
+<script src="@Url.Content("~/js/public.common.js")"></script>
+
+
+

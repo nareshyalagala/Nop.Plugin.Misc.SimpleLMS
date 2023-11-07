@@ -1,0 +1,46 @@
+﻿@model LessonModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+@{
+
+}
+<div class="card bg-white ml-3" >
+    <div class="card-header border-info">
+
+        @if (Model.LessonType == Nop.Plugin.Misc.SimpleLMS.Domains.LessonType.Video)
+        {
+            <img src='@Url.Content("~/Plugins/Misc.SimpleLMS/Content/Admin/images/video-player.png")' height="16" class="mr-3" />
+        }
+        else if (Model.LessonType == Nop.Plugin.Misc.SimpleLMS.Domains.LessonType.Text)
+        {
+            <img src='@Url.Content("~/Plugins/Misc.SimpleLMS/Content/Admin/images/text.png")' height="16" class="mr-3" />
+        }
+
+
+        @Model.DisplayOrder. Lesson: <strong>@Model.Name</strong>
+
+
+
+        @if (Model.IsFreeLesson)
+        {
+            <span class='badge badge-success ml-2'>Free</span>
+        }
+
+
+
+        <div class="float-right">
+            <button type="button" class="btn btn-primary btn-sm" onclick="editLesson(@Model.Id,@Model.SectionId,@Model.CourseId)" id="edit-lesson-@Model.Id">@T("SimpleLMS.Edit") @T("SimpleLMS.Lesson")</button>&nbsp;
+            <button type="button" class="btn btn-danger btn-sm" id="delete-lesson-@Model.Id" onclick="deleteLesson(@Model.Id,@Model.SectionId,@Model.CourseId)">@T("SimpleLMS.Delete") @T("SimpleLMS.Lesson")</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

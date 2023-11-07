@@ -1,0 +1,265 @@
+﻿@model LessonModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+@{
+
+}
+
+
+<form asp-controller="Course" asp-action="CreateLesson" method="post" id="lesson-form">
+
+    <div class="card-body" id="create-or-edit-lesson">
+
+        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+        <input type="hidden" id="CourseId" name="CourseId" value="@Model.CourseId" />
+        <input type="hidden" id="SectionId" name="SectionId" value="@Model.SectionId" />
+        <input type="hidden" id="DisplayOrder" name="DisplayOrder" value="@Model.DisplayOrder" />
+
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Name" asp-required="true" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="IsFreeLesson" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IsFreeLesson" asp-required="false" />
+                <span asp-validation-for="IsFreeLesson"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="LessonType" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="LessonType" asp-items="Model.AvailableLessonTypes" asp-required="true" />
+                <span asp-validation-for="LessonType"></span>
+            </div>
+        </div>
+
+        <div class="form-group row" id="lesson-contents">
+            <div class="col-md-3">
+                <nop-label asp-for="LessonContents" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="LessonContents" asp-template="RichEditor" />
+                <span asp-validation-for="LessonContents"></span>
+            </div>
+        </div>
+
+        <div class="form-group row" id="video-type">
+            <div class="col-md-3">
+                <nop-label asp-for="VideoType" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="VideoType" asp-items="Model.AvailableVideoTypes" asp-required="true" />
+                <span asp-validation-for="VideoType"></span>
+            </div>
+        </div>
+
+        <div class="form-group row" id="video-id-from-provider">
+            <div class="col-md-3">
+                <nop-label asp-for="VideoIdFromProvider" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="VideoIdFromProvider" asp-required="true" />
+                <span asp-validation-for="VideoIdFromProvider"></span>
+            </div>
+        </div>
+
+        <div class="form-group row" id="video-embed-code">
+            <div class="col-md-3">
+                <nop-label asp-for="VideoEmbedCode" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="VideoEmbedCode" asp-required="true" />
+                <span asp-validation-for="VideoEmbedCode"></span>
+            </div>
+        </div>
+
+        <div class="form-group row" id="video-url">
+            <div class="col-md-3">
+                <nop-label asp-for="VideoUrl" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="VideoUrl" asp-required="true" />
+                <span asp-validation-for="VideoUrl"></span>
+            </div>
+        </div>
+
+        <div class="form-group row" id="video-duration">
+            <div class="col-md-3">
+                <nop-label asp-for="Duration" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Duration" asp-required="true" />
+                <span asp-validation-for="Duration"></span>
+            </div>
+        </div>
+
+        <div class="form-group row" id="attachment-type">
+            <div class="col-md-3">
+                <nop-label asp-for="AttachmentType" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="AttachmentType" asp-items="Model.AvailableAttachmentTypes" asp-required="true" />
+                <span asp-validation-for="AttachmentType"></span>
+            </div>
+        </div>
+
+
+        <div class="form-group row" id="submit-button">
+            <div class="col-md-3">
+
+            </div>
+            <div class="col-md-9">
+                <button type="button" class="btn btn-primary btn-sm" id="add-lesson-submit">
+                    @(Model.Id>0 ?  T("SimpleLMS.Update") + " " + @T("SimpleLMS.Lesson") : T("SimpleLMS.Add") + " " + @T("SimpleLMS.Lesson"))
+                </button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#add-lesson-submit').off();
+
+            $('#add-lesson-submit').on('click',
+                function (e) {
+
+                    e.preventDefault();
+
+                    var _form = $(this).closest("form");
+                    _form.removeData('validator');
+                    _form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse(_form);
+
+                    var isValid = $(_form).validate().form();
+
+                    if (!isValid) {
+                        return false;
+                    }
+
+                    //alert();
+
+
+                    //alert($('#create-or-edit-section').serialize());
+                    $(this).prop('disabled', true);
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action((Model.Id>0? "EditLesson": "CreateLesson"), "Course")',
+                        //data: $('#create-or-edit-section').serialize(),
+                        data: {
+                            id: $("#create-or-edit-lesson").find("#Id").val(),
+                            courseId: $("#create-or-edit-lesson").find("#CourseId").val(),
+                            sectionId: $("#create-or-edit-lesson").find("#SectionId").val(),
+                            displayOrder: $("#create-or-edit-lesson").find("#DisplayOrder").val(),
+                            name: $("#create-or-edit-lesson").find("#Name").val(),
+                            isFreeLesson: $("#create-or-edit-lesson").find("#IsFreeLesson").is(":checked"),
+                            lessonType: $("#create-or-edit-lesson").find("#LessonType").val(),
+                            videoType: $("#create-or-edit-lesson").find("#VideoType").val(),
+                            videoIdFromProvider: $("#create-or-edit-lesson").find("#VideoIdFromProvider").val(),
+                            duration: $("#create-or-edit-lesson").find("#Duration").val(),
+                            lessonContents: tinymce.get("LessonContents").getContent({ format: "html" })
+                        },
+                        headers: {
+                            "RequestVerificationToken":
+                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+
+                            $("form").removeData("unobtrusiveValidation");
+                            $.validator.unobtrusive.parse("form");
+                            $('#create-or-edit-lesson-modal').dialog('destroy').remove();
+                            removeTinymce();
+                            refreshSections();
+                        },
+                        failure: function (response) {
+                            $('#add-lesson-submit').prop('disabled', false);
+                            alert(JSON.stringify(response));
+                        },
+                        error: function (response) {
+
+                            let obj = JSON.parse(response.responseText);
+                            var errorArray = {};
+
+                            $.each(obj, function (key, value) {
+                                errorArray[key] = value;
+                            });
+
+
+
+                            try {
+                                $('#lesson-form').data('validator').showErrors(errorArray);
+                            }
+                            catch (e) {
+
+                            }
+
+                            $('#add-lesson-submit').prop('disabled', false);
+
+                        }
+                    });
+                });
+
+
+            $("#LessonType").change(function () {
+                lessonTypeChange();
+            });
+
+            hidelAll();
+            lessonTypeChange();
+
+        });
+
+
+        function lessonTypeChange() {
+
+            hidelAll();
+
+            var lessonTypeText = $('#LessonType').find(":selected").text();
+
+            if (lessonTypeText == "Video") {
+                $("#video-type").show();
+                $("#video-id-from-provider").show();
+                $("#video-duration").show();
+                $("#lesson-contents").show();
+            }
+            else if (lessonTypeText == "Text") {
+                $("#lesson-contents").show();
+            }
+            else if (lessonTypeText == "Document") {
+                $("#attachment-type").show();
+            }
+            $("#submit-button").show();
+        }
+
+        function hidelAll() {
+            $("#lesson-contents").hide();
+            $("#video-type").hide();
+            $("#video-id-from-provider").hide();
+            $("#video-embed-code").hide();
+            $("#video-url").hide();
+            $("#video-duration").hide();
+            $("#attachment-type").hide();
+            $("#submit-button").hide();
+        }
+
+    </script>
+
+</form>

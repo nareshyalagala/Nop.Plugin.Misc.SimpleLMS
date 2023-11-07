@@ -1,0 +1,154 @@
+﻿@model SortableEntity
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+@using Nop.Plugin.Misc.SimpleLMS.Domains;
+
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+@{
+
+}
+
+
+<form method="post" id="sort-form">
+
+    <div class="card-body" id="sort">
+
+        <input type="hidden" id="ParentId" name="ParentId" value="@Model.ParentId" />
+        <input type="hidden" id="SortRecordType" name="SortRecordType" value="@Model.SortRecordType" />
+
+        <ul id="sort-records" class="list-group bg-white">
+            @if (Model.SortRecords != null && Model.SortRecords.Count > 0)
+            {
+                for (int i = 0; i < Model.SortRecords.Count; i++)
+                {
+                    <li class="ui-state-default list-group-item mb-1 all-scroll  border-0" id="@Model.SortRecords[i].Id">
+                        <span class="border-1 border-info">
+                            <strong> @Model.SortRecords[i].DisplayText</strong>
+                        </span>
+                    </li>
+                }
+            }
+        </ul>
+
+
+        <div class="form-group row mt-3" id="submit-button">
+
+            <div class="col-md-12">
+                @if (Model.SortRecords != null && Model.SortRecords.Count > 0)
+                {
+                    <button type="button" class="btn btn-primary btn-sm float-right" id="sort-submit">
+                        @T("SimpleLMS.Update")
+                    </button>
+                }
+                else if (@Model.SortRecordType == SortRecordType.Section)
+                {
+                    <span>
+                        @T("SimpleLMS.NoSectionsAvailable")
+                    </span>
+                }
+                else if (@Model.SortRecordType == SortRecordType.Lesson)
+                {
+                    <span>
+                        @T("SimpleLMS.NoLessonsAvailable")
+                    </span>
+                }
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#sort-records").sortable();
+
+
+            $("#sort-records").disableSelection();
+
+            $('#sort-submit').off();
+
+            $('#sort-submit').on('click',
+                function (e) {
+
+                    e.preventDefault();
+
+
+                    var idsInOrder = $("#sort-records").sortable("toArray");
+
+
+                    var _form = $(this).closest("form");
+                    _form.removeData('validator');
+                    _form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse(_form);
+
+                    var isValid = $(_form).validate().form();
+
+                    if (!isValid) {
+                        return false;
+                    }
+
+                    $(this).prop('disabled', true);
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action((Model.SortRecordType == SortRecordType.Lesson ? "SortLessons" : "SortSections"), "Course")',
+                        //data: $('#create-or-edit-section').serialize(),
+                        data: {
+                            parentId: $("#sort").find("#ParentId").val(),
+                            sortRecordType: $("#sort").find("#SortRecordType").val(),
+                            newSortOrderValues: JSON.stringify(idsInOrder),
+                        },
+                        headers: {
+                            "RequestVerificationToken":
+                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+
+                            $("form").removeData("unobtrusiveValidation");
+                            $.validator.unobtrusive.parse("form");
+                            $('#sort-modal').dialog('destroy').remove();
+
+                            refreshSections();
+                        },
+                        failure: function (response) {
+                            $('#sort-submit').prop('disabled', false);
+                            alert(JSON.stringify(response));
+                        },
+                        error: function (response) {
+                            try {
+
+                            let obj = JSON.parse(response.responseText);
+                            var errorArray = {};
+
+                            $.each(obj, function (key, value) {
+                                errorArray[key] = value;
+                            });
+
+                               $('#sort-form').data('validator').showErrors(errorArray);
+                            }
+                            catch (e) {
+                                alert(response.responseText);
+                            }
+
+                            $('#sort-submit').prop('disabled', false);
+
+                        }
+                    });
+                });
+
+
+
+        });
+
+
+    </script>
+    <style type="text/css">
+        .all-scroll {
+            cursor: all-scroll;
+        }
+    </style>
+
+</form>

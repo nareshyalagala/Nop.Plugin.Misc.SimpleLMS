@@ -1,0 +1,35 @@
+﻿@model CourseModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+@{
+
+}
+
+<div class="card-body">
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ProductId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="ProductId" asp-items="Model.AvailableProducts" asp-required="true" />
+            <span asp-validation-for="ProductId"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,46 @@
+﻿@model CourseModel
+
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+@inject INopHtmlHelper NopHtml
+
+
+@{
+
+    const string hideInfoBlockAttributeName = "CoursePage.HideInfoBlock";
+
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+
+    const string hideCourseContentBlockAttributeName = "CoursePage.HideCourseContentBlock";
+
+    var hideCourseContentBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCourseContentBlockAttributeName);
+
+    NopHtml.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/tinymce/tinymce.min.js", excludeFromBundle: true);
+
+}
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+
+
+
+            <nop-cards id="course-cards">
+                <nop-card asp-name="course-info" asp-icon="fas fa-info" asp-title="@T("SimpleLMS.Course") @T("SimpleLMS.Info")"
+                          asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">
+                    @await Html.PartialAsync("_CreateOrUpdate.Info.cshtml", Model)
+                </nop-card>
+
+                <nop-card asp-name="course-content" asp-icon="fas fa-info" asp-title="@T("SimpleLMS.CourseContent")"
+                          asp-hide-block-attribute-name="@hideCourseContentBlockAttributeName" asp-hide="@hideCourseContentBlock" asp-advanced="false">
+                    @await Html.PartialAsync("_CreateOrUpdate.CourseContent.cshtml", Model)
+                </nop-card>
+            </nop-cards>
+
+
+
+        </div>
+    </div>
+</section>

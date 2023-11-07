@@ -1,0 +1,26 @@
+﻿
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+@model ConfigurationModel
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+
+@{
+
+}
+
+<div class="card-body">
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="VdoCipherKey" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="VdoCipherKey" asp-required="true" />
+            <span asp-validation-for="VdoCipherKey"></span>
+        </div>
+    </div>
+
+</div>

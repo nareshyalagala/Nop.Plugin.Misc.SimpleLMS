@@ -1,0 +1,44 @@
+﻿
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+@using Nop.Services.Stores
+@model ConfigurationModel
+@using Nop.Plugin.Misc.SimpleLMS.Areas.Admin.Models
+
+
+@{
+
+}
+
+<div class="card-body">
+
+    
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="VimeoClient" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="VimeoClient" asp-required="true" />
+            <span asp-validation-for="VimeoClient"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="VimeoSecret" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="VimeoSecret" asp-required="true" />
+            <span asp-validation-for="VimeoSecret"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="VimeoAccess" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="VimeoAccess" asp-required="true" />
+            <span asp-validation-for="VimeoAccess"></span>
+        </div>
+    </div>
+</div>

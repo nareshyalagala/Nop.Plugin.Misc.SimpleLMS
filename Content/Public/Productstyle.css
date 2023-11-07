@@ -1,0 +1,208 @@
+.hide-overflow-x {
+    overflow-x: hidden;
+}
+
+@media (min-width: 992px) {
+    .cstm-nav .nav-link {
+        padding-right: 1rem !important;
+        padding-left: 1rem !important;
+    }
+}
+
+.course-page .about-course h5 {
+    margin-bottom: 20px;
+}
+
+.course-page .list-group.side-menu {
+    font-size: 0.85rem;
+    border-radius: 0;
+}
+
+.course-page .side-menu .list-group-item {
+    padding: 0;
+    font-size: 0.85rem;
+}
+
+.course-page .duration {
+    line-height: 1.4;
+    font-size: 12px;
+    color: #6c757d
+}
+
+.side-menu a, .dropdown-btn {
+    text-decoration: none;
+    color: #222;
+    display: block;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    padding: 8px;
+    transition: 0.3s;
+}
+
+    .side-menu a, .dropdown-btn:focus {
+        outline: 0;
+    }
+
+.side-menu .list-group-item.side-menu-title {
+    padding: 10px;
+}
+
+.side-menu a:hover, .dropdown-btn:hover {
+    color: #818181;
+}
+
+.active {
+    color: #818181;
+}
+
+.dropdown-container {
+    display: none;
+    padding: 8px 0;
+    transition: 0.3s ease-out;
+}
+
+    .dropdown-container a:hover, .dropdown-container a:hover.active {
+        background-color: #D1D7DC;
+    }
+
+.fa-caret-down {
+    float: right;
+    padding-right: 8px;
+}
+
+[data-toggle="collapse"] .fa:before {
+    content: "\f0d7";
+}
+
+[data-toggle="collapse"].collapsed .fa:before {
+    content: "\f0da";
+}
+
+.vertical-align {
+    vertical-align: text-top;
+}
+
+.course-lesson {
+}
+
+    .course-lesson:hover {
+        background: #eee;
+    }
+
+.course-lesson-active {
+    background: #d1d7dc;
+}
+
+
+
+@keyframes growProgressBar {
+    0%, 33% {
+        --pgPercentage: 0;
+    }
+
+    100% {
+        --pgPercentage: var(--value);
+    }
+}
+
+@property --pgPercentage {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+div[role="progressbar"] {
+    --size: 3.5rem;
+    --fg: #369;
+    --bg: #def;
+    --pgPercentage: var(--value);
+    animation: growProgressBar 3s 1 forwards;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    display: inline-grid;
+    place-items: center;
+    background: radial-gradient(closest-side, white 80%, transparent 0 99.9%, white 0), conic-gradient(var(--fg) calc(var(--pgPercentage) * 1%), var(--bg) 0);
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: calc(var(--size) / 5);
+    color: var(--fg);
+}
+
+    div[role="progressbar"]::before {
+        counter-reset: percentage var(--value);
+        content: counter(percentage) '%';
+    }
+
+#loader {
+    position: fixed;
+    width: 200px;
+    padding: 10px;
+    left: 45%;
+    top: 0;
+    display: none;
+    background-color: #fff;
+    z-index: 99999;
+    text-align: center;
+}
+
+.video-wrapper {
+    width: 100%;
+}
+
+.video-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+    .video-container::after {
+        padding-top: 56.25%;
+        display: block;
+        content: '';
+    }
+
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+@media (max-width: 768px) {
+    #loaddiv {
+        height: 60vh;
+        overflow-y: scroll;
+    }
+    body {
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 648px) {
+    #loaddiv {
+        height: 50vh;
+        overflow-y: scroll;
+    }
+
+    body {
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 480px) {
+    #loaddiv {
+        height: 40vh;
+        overflow-y: scroll;
+    }
+
+    body {
+        overflow: hidden;
+    }
+}
+
+
